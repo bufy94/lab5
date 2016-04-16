@@ -101,7 +101,7 @@ public class agenda {
             else if (opt == 2) {
                 String nume = readStringConsole("Introduceti numele dorit:");
                 String telefon = readStringConsole("Introduceti telefonul dorit:");
-               creare(nume,telefon);
+               creareFaraDuplicat(nume,telefon);
             }
             else if (opt == 3){
                 String nume = readStringConsole("introduceti numele cautat: ");
@@ -143,16 +143,18 @@ public class agenda {
     }
 
     //CREARE NUME NOU FARA DUPLICAT
-    public static void creareFaraDuplicat(String nume) {
+    public static void creareFaraDuplicat(String nume , String telefon) {
         int i = cautare(nume); //cautam daca mai exista
         if (i == -1) {  //true inseamna ca inca nu exista numele introdus
             if(index<listaPersoane.length) {
                 listaPersoane[index].setName(nume);
+                listaPersoane[index].setPhoneNumber(telefon);
                 index++;}
             else{ // incercam sa gasim locuri libere in sir
                 for (int j = 0; j < listaPersoane.length; j++) {
                     if (listaPersoane[j].getName() == null) { //a gasit primul loc liber, il scriem aici
                         listaPersoane[j].setName(nume);
+                        listaPersoane[j].setPhoneNumber(telefon);
                         System.out.println("Numele " + nume + " a fost introdus in agenda!");
                         break;
                     }
