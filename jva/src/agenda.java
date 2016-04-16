@@ -146,10 +146,13 @@ public class agenda {
     public static void creareFaraDuplicat(String nume , String telefon) {
         int i = cautare(nume); //cautam daca mai exista
         if (i == -1) {  //true inseamna ca inca nu exista numele introdus
-            if(index<listaPersoane.length) {
-                listaPersoane[index].setName(nume);
-                listaPersoane[index].setPhoneNumber(telefon);
-                index++;}
+            if (index < listaPersoane.length){
+                if (listaPersoane[index] == null) {
+                    listaPersoane[index].setName(nume);
+                    listaPersoane[index].setPhoneNumber(telefon);
+                    index++;
+                                   }
+        }
             else{ // incercam sa gasim locuri libere in sir
                 for (int j = 0; j < listaPersoane.length; j++) {
                     if (listaPersoane[j].getName() == null) { //a gasit primul loc liber, il scriem aici
@@ -176,6 +179,7 @@ public class agenda {
         int r = -1;
 
         for (int i = 0; i < listaPersoane.length; i++) {
+            if(listaPersoane[i]!=null)
             if (numePersoana.equals(listaPersoane[i].getName())) {
                 r = i;
                 break;
