@@ -79,7 +79,7 @@ public class agenda {
 
     //Start of actual code
 
-    static String[] sirNume = new String[10]; //declarare+initializare
+    static Person[] listaPersoane = new Person[10]; //declarare+initializare
     static int index=0;
 
     //Functia principala, main
@@ -90,7 +90,7 @@ public class agenda {
         int opt = 0;
         do {
             printConsole("Meniul principal:"); //l-am facut pe orizontala pentru ca imi ocupa prea mult din consola
-            printConsole("1-Afisarea sirului de nume / 2-Adaugare nume / 3-Cautare nume / 4-Modificare nume / 5-Stergere nume");
+            printConsole("1-Afisarea perosane / 2-Adaugare persoane / 3-Cautare nume / 4-Modificare nume / 5-Stergere nume");
             printConsole("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
             opt = readIntConsole("Alegeti optiunea dorita:");
@@ -99,12 +99,13 @@ public class agenda {
             if (opt == 1)
                 listare();
             else if (opt == 2) {
-                String v = readStringConsole("Introduceti numele dorit:");
-                creareFaraDuplicat(v);
+                String nume = readStringConsole("Introduceti numele dorit:");
+                String telefon = readStringConsole("Introduceti telefonul dorit:");
+               creare(nume,telefon);
             }
             else if (opt == 3){
-                String valoare = readStringConsole("introduceti numele cautat: ");
-                cautareAfisare(valoare);
+                String nume = readStringConsole("introduceti numele cautat: ");
+                cautareAfisare(nume);
             }
             else if (opt ==4){
                 String nume = readStringConsole("introduceti numele de modificat:");
@@ -121,34 +122,38 @@ public class agenda {
 
     //METODE
 
+
     //AFISARE SIR DE NUME
     public static void listare() {
-        for (int i = 0; i < sirNume.length; i++) {
-            if (sirNume[i] != null) {  // => la inceput nu afiseaza nimic, pentru ca nu am introdus nume
-                printConsole(sirNume[i]);
+        for (int i = 0; i < listaPersoane.length; i++) {
+            if (listaPersoane[i] != null) {  // => la inceput nu afiseaza nimic, pentru ca nu am introdus nume
+                printConsole(listaPersoane[i].getName());
+                printConsole(listaPersoane[i].getPhoneNumber());
             }
         }
         System.out.println();
     }
 
     //CREARE NUME NOU IN AGENDA
-    public static void creare(String valoare) {
-        sirNume[index]=valoare;
+    public static void creare(String nume,String telefon) {
+        Person p= new Person(nume,telefon);
+
+        listaPersoane[index]=p;
         index++;
     }
 
     //CREARE NUME NOU FARA DUPLICAT
-    public static void creareFaraDuplicat(String valoare) {
-        int i = cautare(valoare); //cautam daca mai exista
+    public static void creareFaraDuplicat(String nume) {
+        int i = cautare(nume); //cautam daca mai exista
         if (i == -1) {  //true inseamna ca inca nu exista numele introdus
-            if(index<sirNume.length) {
-                sirNume[index] = valoare;
+            if(index<listaPersoane.length) {
+                listaPersoane[index].setName(nume);
                 index++;}
             else{ // incercam sa gasim locuri libere in sir
-                for (int j = 0; j < sirNume.length; j++) {
-                    if (sirNume[j] == null) { //a gasit primul loc liber, il scriem aici
-                        sirNume[j] = valoare;
-                        System.out.println("Numele " + valoare + " a fost introdus in agenda!");
+                for (int j = 0; j < listaPersoane.length; j++) {
+                    if (listaPersoane[j].getName() == null) { //a gasit primul loc liber, il scriem aici
+                        listaPersoane[j].setName(nume);
+                        System.out.println("Numele " + nume + " a fost introdus in agenda!");
                         break;
                     }
                     else{
@@ -165,11 +170,11 @@ public class agenda {
     }
 
     //CAUTARE NUME IN AGENDA
-    public static int cautare(String valoare) {
+    public static int cautare(String numePersoana) {
         int r = -1;
 
-        for (int i = 0; i < sirNume.length; i++) {
-            if (valoare.equals(sirNume[i])) {
+        for (int i = 0; i < listaPersoane.length; i++) {
+            if (numePersoana.equals(listaPersoane[i].getName())) {
                 r = i;
                 break;
             }
@@ -182,26 +187,28 @@ public class agenda {
     public static int cautareAfisare(String valoare) {
         int r = -1;
 
-        for (int i = 0; i < sirNume.length; i++) {
-            if (valoare.equals(sirNume[i])) {
-                r = i;
-                printConsole("Numele " + valoare + " a fost gasit pe pozitia " + r);
-                break;
+        for (int i = 0; i < listaPersoane.length; i++) {
+            if(listaPersoane[i]!=null){
+                if (valoare.equals(listaPersoane[i].getName())) {
+                    r = i;
+                    printConsole("Numele " + valoare + " a fost gasit pe pozitia " + r);
+                    break;
+                }
             }
-            else{System.out.println("Numele " + valoare + " nu a fost gasit in agenda!"); break;}
-        }
+        }if(r==-1)
+            printConsole("Nu-i aici !");
         System.out.println();
         return r;
     }
 
-    //MODIFICARE NUME IN AGENDA
+//    //MODIFICARE NUME IN AGENDA
     public static void modificare(String nume) {
         int index = cautare(nume); //indexul numelui de modificat
         if (index == -1) {
             printConsole("Numele " + nume + " nu exista in agenda!");
         } else {
-            String numeModif = readStringConsole("Introduceti numele dorit: ");
-            sirNume[index] = numeModif;  //inlocuim numele de la indexul respectiv cu numele nou
+            String numee = readStringConsole("Introduceti numele dorit: ");
+            listaPersoane[index].setName(numee);  //inlocuim numele de la indexul respectiv cu numele nou
             printConsole("Nume modificat cu succes. Verificati prin afisare.");
         }
         System.out.println();
@@ -216,7 +223,7 @@ public class agenda {
             System.out.println();
         }
         else {
-            sirNume[index] = null;
+            listaPersoane[index] = null;
             printConsole("Nume sters cu succes. Verificati prin afisare.");
         }
         System.out.println();
